@@ -68,15 +68,10 @@ export default class App extends React.Component {
     }
   }
 
-  scatterPay = async () => {
+  recordCertification = async () => {
     ScatterJS.plugins( new ScatterEOS() );
     try {
-      const connected = await ScatterJS.scatter.connect('My-App');
-      if (!connected) return false;
-      const scatter = await ScatterJS.scatter;
-      const requiredFields = { accounts:[network] };
-      const identity = await scatter.getIdentity(requiredFields);
-      if (identity) {
+      if (!(this.state.identity === '')) {
         this.setState(identity);
         const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
         console.log(account)
