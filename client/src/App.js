@@ -1,17 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-export default class App extends React.Component {
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Users</Text>
-
-      </View>
-    );
-  }
-}
+import { Api, JsonRpc, RpcError } from 'eosjs';
+import ScatterJS, { Network } from 'scatterjs-core';
+import ScatterEOS from 'scatterjs-plugin-eosjs2';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,3 +29,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
+const network = Network.fromJson({
+    blockchain:'eos',
+    protocol:'http',
+    host:'127.0.0.1',
+    port:8888,
+    chainId: process.env.REACT_APP_CHAIN_ID,
+    name: 'localhost'
+});
+
+const rpc = new JsonRpc(network.fullhost());
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Users</Text>
+
+      </View>
+    );
+  }
+}
