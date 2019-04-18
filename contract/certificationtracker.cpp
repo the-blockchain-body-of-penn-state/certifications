@@ -2,10 +2,10 @@
 
 using namespace eosio;
 
-class [[eosio::contract("addressbook")]] addressbook : public eosio::contract {
+class [[eosio::contract("certifications")]] certifications : public eosio::contract {
   public:
     using contract::contract;
-    addressbook(name receiver, name code,  datastream<const char*> ds): contract(receiver, code, ds) {}
+    certifications(name receiver, name code,  datastream<const char*> ds): contract(receiver, code, ds) {}
 
     [[eosio::action]]
     void upsert(name user, double score, std::string date, std::string field) {
@@ -50,4 +50,4 @@ class [[eosio::contract("addressbook")]] addressbook : public eosio::contract {
     typedef eosio::multi_index<"certification"_n, certification> address_index;
 };
 
-EOSIO_DISPATCH( addressbook, (upsert)(erase))
+EOSIO_DISPATCH( certifications, (upsert)(erase))
