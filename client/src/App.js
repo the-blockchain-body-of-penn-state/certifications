@@ -1,29 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Svg, {
-  Circle,
-  ClipPath,
-  Defs,
-  Ellipse,
-  G,
-  Image,
-  Line,
-  LinearGradient as SvgLinearGradient,
-  Mask,
-  Path,
-  Pattern,
-  Polygon,
-  Polyline,
-  RadialGradient,
-  Rect,
-  Stop,
-  Symbol,
-  TSpan,
-  Text as SvgText,
-  TextPath,
-  Use
-} from 'react-native-svg';
-import LinearGradient from './components/LinearGradient';
 
 export default class App extends React.Component {
 
