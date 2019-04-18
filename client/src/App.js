@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Api, JsonRpc, RpcError } from 'eosjs';
 import ScatterJS, { Network } from 'scatterjs-core';
 import ScatterEOS from 'scatterjs-plugin-eosjs2';
+import Button from './components/Button'
 
 const styles = StyleSheet.create({
   container: {
@@ -55,9 +56,12 @@ export default class App extends React.Component {
       const scatter = await ScatterJS.scatter;
       const requiredFields = { accounts:[network] };
       const identity = await scatter.getIdentity(requiredFields);
-      setState({
+      const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+      this.setState({
         identity: identity
       })
+      console.log(identity);
+      console.log(this.state.identity)
     } catch (err) {
       console.log(err);
       this.setState({scatterConnectError: 'Could not connect to Scatter'});
@@ -117,7 +121,11 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text>Users</Text>
-
+        <Button
+          onPress = {this.scatterLogin}
+          title = 'Login with Scatter'
+          color = 'gray'
+        />
       </View>
     );
   }
