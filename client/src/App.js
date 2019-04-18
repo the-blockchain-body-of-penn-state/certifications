@@ -42,6 +42,77 @@ const network = Network.fromJson({
 const rpc = new JsonRpc(network.fullhost());
 
 export default class App extends React.Component {
+  state = {
+    identity: null,
+    scatterConnectError: '',
+  }
+
+  scatterLogin = async () => {
+    ScatterJS.plugins( new ScatterEOS() );
+    try {
+      const connected = await ScatterJS.scatter.connect('My-App');
+      if (!connected) return false;
+      const scatter = await ScatterJS.scatter;
+      const requiredFields = { accounts:[network] };
+      const identity = await scatter.getIdentity(requiredFields);
+      setState({
+        identity: identity
+      })
+    } catch (err) {
+      console.log(err);
+      this.setState({scatterConnectError: 'Could not connect to Scatter'});
+    }
+  }
+
+  scatterPay = async () => {
+    ScatterJS.plugins( new ScatterEOS() );
+    try {
+      const connected = await ScatterJS.scatter.connect('My-App');
+      if (!connected) return false;
+      const scatter = await ScatterJS.scatter;
+      const requiredFields = { accounts:[network] };
+      const identity = await scatter.getIdentity(requiredFields);
+      if (identity) {
+        this.setState(identity);
+        const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+        console.log(account)
+        const api = scatter.eos(network, Api, { rpc, beta3:true });
+        console.log(api);
+        try {
+          const trx = await api.transact({
+            actions: [{
+              account: 'eosio.token',
+              name: 'transfer',
+              authorization: [{
+                actor: account.name,
+                permission: account.authority,
+              }],
+              data: {
+                from: account.name,
+                to: 'james',
+                quantity: '3.0000 EOS',
+                memo: `from ${account.name}`,
+              },
+            }]
+          }, {
+            blocksBehind: 3,
+            expireSeconds: 30,
+          });
+          console.log(trx);
+
+          scatter.forgetIdentity();
+        } catch (e) {
+          console.log('\nCaught exception: ' + e);
+          if (e instanceof RpcError)
+            console.log(JSON.stringify(e.json, null, 2));
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      this.setState({scatterConnectError: 'Could not connect to Scatter'});
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
